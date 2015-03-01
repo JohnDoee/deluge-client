@@ -12,7 +12,7 @@ def read_description():
         return 'No description found'
 
 setup(
-    name='deluge_client',
+    name='deluge-client',
     version='1.0.0',
     description='Simple Deluge Client',
     long_description=read_description(),
