@@ -65,7 +65,7 @@ __all__ = ['dumps', 'loads']
 import sys
 
 py3 = False
-if sys.version_info.major >= 3:
+if sys.version_info >= (3, 0):
     py3 = True
     long = int
     unicode = str
