@@ -12,8 +12,8 @@ def read_description():
         return 'No description found'
 
 setup(
-    name='deluge_client',
-    version='1.0.0',
+    name='deluge-client',
+    version='1.0.1',
     description='Simple Deluge Client',
     long_description=read_description(),
     author='Anders Jensen',
