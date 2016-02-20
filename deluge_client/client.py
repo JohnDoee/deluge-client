@@ -32,7 +32,13 @@ class DelugeRPCClient(object):
         
         self.request_id = 1
         self.connected = False
-        self._socket = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+        self._create_socket()
+    
+    def _create_socket(self, ssl_version=None):
+        if ssl_version is not None:
+            self._socket = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), ssl_version=ssl_version)
+        else:
+            self._socket = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
         self._socket.settimeout(self.timeout)
     
     def connect(self):
@@ -40,7 +46,16 @@ class DelugeRPCClient(object):
         Connects to the Deluge instance
         """
         logger.info('Connecting to %s:%s' % (self.host, self.port))
-        self._socket.connect((self.host, self.port))
+        try:
+            self._socket.connect((self.host, self.port))
+        except ssl.SSLError as e:
+            if e.reason != 'UNSUPPORTED_PROTOCOL' or not hasattr(ssl, 'PROTOCOL_SSLv3'):
+                raise
+            
+            logger.warning('Was unable to ssl handshake, trying to force SSLv3 (insecure)')
+            self._create_socket()
+            self._socket.connect((self.host, self.port), ssl_version=ssl.PROTOCOL_SSLv3)
+        
         logger.debug('Connected to Deluge, logging in')
         result = self.call('daemon.login', self.username, self.password)
         logger.debug('Logged in with value %r' % result)
