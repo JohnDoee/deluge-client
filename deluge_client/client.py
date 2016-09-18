@@ -61,6 +61,13 @@ class DelugeRPCClient(object):
         logger.debug('Logged in with value %r' % result)
         self.connected = True
     
+    def disconnect(self):
+        """
+        Disconnect from deluge
+        """
+        if self.connected:
+            self._socket.close()
+    
     def call(self, method, *args, **kwargs):
         """
         Calls an RPC function
