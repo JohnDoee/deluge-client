@@ -53,8 +53,8 @@ class DelugeRPCClient(object):
                 raise
             
             logger.warning('Was unable to ssl handshake, trying to force SSLv3 (insecure)')
-            self._create_socket()
-            self._socket.connect((self.host, self.port), ssl_version=ssl.PROTOCOL_SSLv3)
+            self._create_socket(ssl_version=ssl.PROTOCOL_SSLv3)
+            self._socket.connect((self.host, self.port))
         
         logger.debug('Connected to Deluge, logging in')
         result = self.call('daemon.login', self.username, self.password)
