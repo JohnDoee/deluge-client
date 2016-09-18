@@ -1,0 +1,14 @@
+sudo: required
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install deluged
+before_script:
+  - /usr/bin/deluged
+language: python
+python:
+  - "3.5"
+  - "3.4"
+  - "3.3"
+  - "2.7"
+script:
+  - nosetests
