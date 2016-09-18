@@ -4,6 +4,7 @@ before_install:
   - sudo apt-get install deluged
 before_script:
   - /usr/bin/deluged
+  - sleep 5
 language: python
 python:
   - "3.5"
