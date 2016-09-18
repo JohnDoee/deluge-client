@@ -103,7 +103,7 @@ class DelugeRPCClient(object):
         
         if msg_type == RPC_ERROR:
             exception_type, exception_msg, traceback = data[0]
-            exception = type(exception_type, (Exception, ), {})
+            exception = type(str(exception_type), (Exception, ), {})
             exception_msg = '%s\n\n%s' % (exception_msg, traceback)
             raise exception(exception_msg)
         elif msg_type == RPC_RESPONSE:
