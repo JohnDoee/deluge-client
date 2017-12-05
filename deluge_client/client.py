@@ -99,7 +99,7 @@ class DelugeRPCClient(object):
                 continue
             break
         
-        data = list(loads(data), decode_utf8=self.decode_utf8)
+        data = list(loads(data, decode_utf8=self.decode_utf8))
         msg_type = data.pop(0)
         request_id = data.pop(0)
         
