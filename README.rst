@@ -8,7 +8,7 @@ Requirements
 ------------
 
 - Deluge 1.3.x
-- Python 2.6, 2.7, 3.3, 3.4
+- Python 2.6, 2.7, 3.3, 3.4, 3.5
 
 Install
 -------
