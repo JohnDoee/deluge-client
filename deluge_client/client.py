@@ -24,11 +24,13 @@ class CallTimeoutException(Exception):
 class DelugeRPCClient(object):
     timeout = 20
     
-    def __init__(self, host, port, username, password):
+    def __init__(self, host, port, username, password, decode_utf8=False):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
+        
+        self.decode_utf8 = decode_utf8
         
         self.request_id = 1
         self.connected = False
@@ -97,7 +99,7 @@ class DelugeRPCClient(object):
                 continue
             break
         
-        data = list(loads(data))
+        data = list(loads(data, decode_utf8=self.decode_utf8))
         msg_type = data.pop(0)
         request_id = data.pop(0)
         
