@@ -13,7 +13,7 @@ def read_description():
 
 setup(
     name='deluge-client',
-    version='1.0.5',
+    version='1.1.0',
     description='Simple Deluge Client',
     long_description=read_description(),
     author='Anders Jensen',
@@ -28,6 +28,7 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
