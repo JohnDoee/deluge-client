@@ -7,7 +7,7 @@ Note, does not support events and any additional replies from deluge will mess u
 Requirements
 ------------
 
-- Deluge 1.3.x
+- Deluge 1.3.x, 2.0 beta
 - Python 2.6, 2.7, 3.3, 3.4, 3.5
 
 Install
@@ -28,7 +28,7 @@ Usage
 ::
 
     >>> from deluge_client import DelugeRPCClient
-    
+
     >>> client = DelugeRPCClient('127.0.0.1', 12345, 'username', 'password')
     >>> client.connect()
     >>> client.connected
