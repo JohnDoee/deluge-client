@@ -31,12 +31,12 @@ class InvalidHeaderException(Exception):
 class DelugeRPCClient(object):
     timeout = 20
 
-    def __init__(self, host, port, username, password, decode_utf8=False, deluge_version=1):
+    def __init__(self, host, port, username, password, decode_utf8=False):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
-        self.deluge_version = deluge_version
+        self.deluge_version = None
 
         self.decode_utf8 = decode_utf8
 
@@ -55,6 +55,18 @@ class DelugeRPCClient(object):
         """
         Connects to the Deluge instance
         """
+        self._connect()
+        logger.debug('Connected to Deluge, detecting daemon version')
+        self._detect_deluge_version()
+        logger.debug('Daemon version {} detected, logging in'.format(self.deluge_version))
+        if self.deluge_version == 2:
+            result = self.call('daemon.login', self.username, self.password, client_version='deluge-client')
+        else:
+            result = self.call('daemon.login', self.username, self.password)
+        logger.debug('Logged in with value %r' % result)
+        self.connected = True
+
+    def _connect(self):
         logger.info('Connecting to %s:%s' % (self.host, self.port))
         try:
             self._socket.connect((self.host, self.port))
@@ -66,14 +78,6 @@ class DelugeRPCClient(object):
             self._create_socket(ssl_version=ssl.PROTOCOL_SSLv3)
             self._socket.connect((self.host, self.port))
 
-        logger.debug('Connected to Deluge, logging in')
-        if self.deluge_version == 2:
-            result = self.call('daemon.login', self.username, self.password, client_version='deluge-client')
-        else:
-            result = self.call('daemon.login', self.username, self.password)
-        logger.debug('Logged in with value %r' % result)
-        self.connected = True
-
     def disconnect(self):
         """
         Disconnect from deluge
@@ -81,22 +85,36 @@ class DelugeRPCClient(object):
         if self.connected:
             self._socket.close()
 
-    def call(self, method, *args, **kwargs):
-        """
-        Calls an RPC function
-        """
+    def _detect_deluge_version(self):
+        self._send_call(1, 'daemon.info')
+        self._send_call(2, 'daemon.info')
+        result = self._socket.recv(1)
+        if result[:1] != b'D':
+            self.deluge_version = 1
+            # Deluge 1 doesn't recover well from the bad request. Re-connect the socket.
+            self._socket.close()
+            self._create_socket()
+            self._connect()
+        else:
+            self.deluge_version = 2
+            # If we need the specific version of deluge 2, this is it.
+            daemon_version = self._receive_response(2, partial_data=result)
+        return self.deluge_version
+
+    def _send_call(self, deluge_version, method, *args, **kwargs):
         self.request_id += 1
         logger.debug('Calling reqid %s method %r with args:%r kwargs:%r' % (self.request_id, method, args, kwargs))
 
         req = ((self.request_id, method, args, kwargs), )
         req = zlib.compress(dumps(req))
 
-        if self.deluge_version == 2:
+        if deluge_version == 2:
             self._socket.send(b'D' + struct.pack("!i", len(req)))
         self._socket.send(req)
 
+    def _receive_response(self, deluge_version, partial_data=b''):
         expected_bytes = None
-        data = b''
+        data = partial_data
         while True:
             try:
                 d = self._socket.recv(READ_SIZE)
@@ -104,7 +122,7 @@ class DelugeRPCClient(object):
                 raise CallTimeoutException()
 
             data += d
-            if self.deluge_version == 2:
+            if deluge_version == 2:
                 if expected_bytes is None:
                     if len(data) < 5:
                         continue
@@ -144,3 +162,10 @@ class DelugeRPCClient(object):
         elif msg_type == RPC_RESPONSE:
             retval = data[0]
             return retval
+
+    def call(self, method, *args, **kwargs):
+        """
+        Calls an RPC function
+        """
+        self._send_call(self.deluge_version, method, *args, **kwargs)
+        return self._receive_response(self.deluge_version)
