@@ -11,5 +11,6 @@ python:
   - "3.4"
   - "3.3"
   - "2.7"
+  - "2.7.6"
 script:
   - nosetests
