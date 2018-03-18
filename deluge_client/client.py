@@ -59,12 +59,14 @@ class DelugeRPCClient(object):
         try:
             self._socket.connect((self.host, self.port))
         except ssl.SSLError as e:
-            if e.reason != 'UNSUPPORTED_PROTOCOL' or not hasattr(ssl, 'PROTOCOL_SSLv3'):
+            # Note: have not verified that we actually get errno 258 for this error
+            if (hasattr(ssl, 'PROTOCOL_SSLv3') and
+                    (getattr(e, 'reason', None) == 'UNSUPPORTED_PROTOCOL' or e.errno == 258)):
+                logger.warning('Was unable to ssl handshake, trying to force SSLv3 (insecure)')
+                self._create_socket(ssl_version=ssl.PROTOCOL_SSLv3)
+                self._socket.connect((self.host, self.port))
+            else:
                 raise
-
-            logger.warning('Was unable to ssl handshake, trying to force SSLv3 (insecure)')
-            self._create_socket(ssl_version=ssl.PROTOCOL_SSLv3)
-            self._socket.connect((self.host, self.port))
 
         logger.debug('Connected to Deluge, logging in')
         if self.deluge_version == 2:
