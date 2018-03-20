@@ -156,9 +156,11 @@ class DelugeRPCClient(object):
         if msg_type == RPC_ERROR:
             if self.deluge_version == 2:
                 exception_type, exception_msg, _, traceback = data
+                # On deluge 2, exception arguments are sent as tuple
+                exception_msg = b', '.join(exception_msg)
             else:
                 exception_type, exception_msg, traceback = data[0]
-            exception = type(str(exception_type.decode('utf-8', 'ignore')), (Exception, ), {})
+            exception = type(exception_type.decode('utf-8', 'ignore'), (Exception, ), {})
             exception_msg = '%s\n%s' % (exception_msg.decode('utf-8', 'ignore'),
                                           traceback.decode('utf-8', 'ignore'))
             raise exception(exception_msg)
