@@ -160,7 +160,7 @@ class DelugeRPCClient(object):
                 exception_msg = b', '.join(exception_msg)
             else:
                 exception_type, exception_msg, traceback = data[0]
-            exception = type(exception_type.decode('utf-8', 'ignore'), (Exception, ), {})
+            exception = type(str(exception_type.decode('utf-8', 'ignore')), (Exception, ), {})
             exception_msg = '%s\n%s' % (exception_msg.decode('utf-8', 'ignore'),
                                           traceback.decode('utf-8', 'ignore'))
             raise exception(exception_msg)
