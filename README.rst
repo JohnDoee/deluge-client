@@ -1,6 +1,7 @@
 Deluge Client
 =============
-[![Build Status](https://travis-ci.org/JohnDoee/deluge-client.png)](https://travis-ci.org/JohnDoee/deluge-client)
+.. image:: https://travis-ci.org/JohnDoee/deluge-client.svg
+    :target: https://travis-ci.org/JohnDoee/deluge-client
 
 A lightweight pure-python rpc client for deluge.
 Note, does not support events and any additional replies from deluge will mess up the datastream.
