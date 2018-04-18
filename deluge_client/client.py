@@ -28,10 +28,14 @@ class InvalidHeaderException(Exception):
     pass
 
 
+class FailedToReconnectException(Exception):
+    pass
+
+
 class DelugeRPCClient(object):
     timeout = 20
 
-    def __init__(self, host, port, username, password, decode_utf8=False):
+    def __init__(self, host, port, username, password, decode_utf8=False, automatic_reconnect=True):
         self.host = host
         self.port = port
         self.username = username
@@ -39,6 +43,7 @@ class DelugeRPCClient(object):
         self.deluge_version = None
 
         self.decode_utf8 = decode_utf8
+        self.automatic_reconnect = automatic_reconnect
 
         self.request_id = 1
         self.connected = False
@@ -86,8 +91,13 @@ class DelugeRPCClient(object):
         """
         if self.connected:
             self._socket.close()
+            self._socket = None
+            self.connected = False
 
     def _detect_deluge_version(self):
+        if self.deluge_version is not None:
+            return
+
         self._send_call(1, 'daemon.info')
         self._send_call(2, 'daemon.info')
         result = self._socket.recv(1)
@@ -168,9 +178,33 @@ class DelugeRPCClient(object):
             retval = data[0]
             return retval
 
+    def reconnect(self):
+        """
+        Reconnect
+        """
+        self.disconnect()
+        self._create_socket()
+        self.connect()
+
     def call(self, method, *args, **kwargs):
         """
         Calls an RPC function
         """
-        self._send_call(self.deluge_version, method, *args, **kwargs)
-        return self._receive_response(self.deluge_version)
+        tried_reconnect = False
+        for _ in range(2):
+            try:
+                self._send_call(self.deluge_version, method, *args, **kwargs)
+                return self._receive_response(self.deluge_version)
+            except (socket.error, ConnectionLostException, CallTimeoutException):
+                if self.automatic_reconnect:
+                    if tried_reconnect:
+                        raise FailedToReconnectException()
+                    else:
+                        try:
+                            self.reconnect()
+                        except (socket.error, ConnectionLostException, CallTimeoutException):
+                            raise FailedToReconnectException()
+
+                    tried_reconnect = True
+                else:
+                    raise
