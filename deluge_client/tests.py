@@ -43,3 +43,5 @@ class TestDelugeClient(TestCase):
             self.client.call('core.get_free_space', '1', '2')
         except Exception as e:
             self.assertEqual('deluge_client.client', e.__module__)
+        else:
+            raise Exception('Should have received an error.')
