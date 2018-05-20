@@ -45,3 +45,8 @@ class TestDelugeClient(TestCase):
             self.assertEqual('deluge_client.client', e.__module__)
         else:
             raise Exception('Should have received an error.')
+
+    def test_attr_caller(self):
+        self.client.connect()
+        self.assertIsInstance(self.client.core.get_free_space(), int)
+        self.assertIsInstance(self.client.core.get_free_space('/'), int)
