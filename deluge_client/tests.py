@@ -39,3 +39,8 @@ class TestDelugeClient(TestCase):
             self.client.call('core.get_free_space', '1', '2')
         except Exception as e:
             self.assertEqual('deluge_client.client', e.__module__)
+
+    def test_attr_caller(self):
+        self.client.connect()
+        self.assertIsInstance(self.client.core.get_free_space(), int)
+        self.assertIsInstance(self.client.core.get_free_space('/'), int)
