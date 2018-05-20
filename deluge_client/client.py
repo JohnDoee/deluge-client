@@ -208,3 +208,18 @@ class DelugeRPCClient(object):
                     tried_reconnect = True
                 else:
                     raise
+
+    def __getattr__(self, item):
+        return RPCCaller(self.call, item)
+
+
+class RPCCaller(object):
+    def __init__(self, caller, method=''):
+        self.caller = caller
+        self.method = method
+
+    def __getattr__(self, item):
+        return RPCCaller(self.caller, self.method+'.'+item)
+
+    def __call__(self, *args, **kwargs):
+        return self.caller(self.method, *args, **kwargs)

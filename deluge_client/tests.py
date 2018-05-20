@@ -1,4 +1,5 @@
 import os
+import sys
 
 from unittest import TestCase
 
@@ -6,7 +7,10 @@ from .client import DelugeRPCClient
 
 class TestDelugeClient(TestCase):
     def setUp(self):
-        auth_path = os.path.expanduser("~/.config/deluge/auth")
+        if sys.platform.startswith('win'):
+            auth_path = os.path.join(os.getenv('APPDATA'), 'deluge', 'auth')
+        else:
+            auth_path = os.path.expanduser("~/.config/deluge/auth")
         
         with open(auth_path, 'rb') as f:
             filedata = f.read().decode("utf-8").split('\n')[0].split(':')
@@ -39,3 +43,10 @@ class TestDelugeClient(TestCase):
             self.client.call('core.get_free_space', '1', '2')
         except Exception as e:
             self.assertEqual('deluge_client.client', e.__module__)
+        else:
+            raise Exception('Should have received an error.')
+
+    def test_attr_caller(self):
+        self.client.connect()
+        self.assertIsInstance(self.client.core.get_free_space(), int)
+        self.assertIsInstance(self.client.core.get_free_space('/'), int)
