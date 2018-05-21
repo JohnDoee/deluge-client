@@ -5,6 +5,11 @@ from unittest import TestCase
 
 from .client import DelugeRPCClient
 
+
+if sys.version_info > (3,):
+    long = int
+
+
 class TestDelugeClient(TestCase):
     def setUp(self):
         if sys.platform.startswith('win'):
@@ -31,11 +36,11 @@ class TestDelugeClient(TestCase):
     
     def test_call_method(self):
         self.client.connect()
-        self.assertIsInstance(self.client.call('core.get_free_space'), int)
+        self.assertIsInstance(self.client.call('core.get_free_space'), (int, long))
     
     def test_call_method_arguments(self):
         self.client.connect()
-        self.assertIsInstance(self.client.call('core.get_free_space', '/'), int)
+        self.assertIsInstance(self.client.call('core.get_free_space', '/'), (int, long))
     
     def test_call_method_exception(self):
         self.client.connect()
@@ -48,5 +53,5 @@ class TestDelugeClient(TestCase):
 
     def test_attr_caller(self):
         self.client.connect()
-        self.assertIsInstance(self.client.core.get_free_space(), int)
-        self.assertIsInstance(self.client.core.get_free_space('/'), int)
+        self.assertIsInstance(self.client.core.get_free_space(), (int, long))
+        self.assertIsInstance(self.client.core.get_free_space('/'), (int, long))
