@@ -1,0 +1,42 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\Python27"
+      DELUGE: 1
+    - PYTHON: "C:\\Python27"
+      DELUGE: 2
+    - PYTHON: "C:\\Python36"
+      DELUGE: 1
+    - PYTHON: "C:\\Python36"
+      DELUGE: 2
+
+for:
+  -
+    matrix:
+      only:
+        - DELUGE: 1
+    install:
+      - choco install deluge --version=1.3.15
+  -
+    matrix:
+      only:
+        - DELUGE: 2
+    install:
+      - appveyor DownloadFile http://download.deluge-torrent.org/2.0/deluge-2.0b1-win32-setup.exe
+      - deluge-2.0b1-win32-setup.exe /S
+
+build: off
+
+before_test:
+  # For some reason we have to create the logfile first
+  - ps: "New-Item -Path 'C:\\Users\\appveyor\\AppData\\Roaming\\deluge' -ItemType Directory"
+  - ps: "Start-Process \"c:\\Program Files (x86)\\Deluge\\deluged.exe\""
+  - "%PYTHON%\\Scripts\\pip.exe install nose"
+  # Give deluged a chance to start
+  - ps: "Start-Sleep -s 10"
+
+test_script:
+  - "%PYTHON%\\Scripts\\nosetests.exe"
+
+on_failure:
+  # Print the deluged log file to help debug problems
+  - "type C:\\Users\\appveyor\\AppData\\Roaming\\deluge\\deluged.log"
