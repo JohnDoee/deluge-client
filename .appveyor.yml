@@ -30,12 +30,12 @@ before_test:
   # For some reason we have to create the logfile first
   - ps: "New-Item -Path 'C:\\Users\\appveyor\\AppData\\Roaming\\deluge' -ItemType Directory"
   - ps: "Start-Process \"c:\\Program Files (x86)\\Deluge\\deluged.exe\""
-  - "%PYTHON%\\Scripts\\pip.exe install nose"
+  - "%PYTHON%\\Scripts\\pip.exe install pytest"
   # Give deluged a chance to start
   - ps: "Start-Sleep -s 10"
 
 test_script:
-  - "%PYTHON%\\Scripts\\nosetests.exe"
+  - "%PYTHON%\\Scripts\\pytest.exe"
 
 on_failure:
   # Print the deluged log file to help debug problems
