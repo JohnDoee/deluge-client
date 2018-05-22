@@ -21,7 +21,6 @@ dist
 *.tmp*
 dropin.cache
 _trial_temp
-*.komodoproject
 docs/_build*
 .env*
-autotorrent.conf
+.pytest_cache
