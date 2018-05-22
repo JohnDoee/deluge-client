@@ -40,7 +40,7 @@ Usage
     True
     >>> client.call('core.get_torrents_status', {}, ['name'])
     {'79816060ea56d56f2a2148cd45705511079f9bca': {'name': 'TPB.AFK.2013.720p.h264-SimonKlose'}}
-    >>> client.core.get_torrents_status(['name'])
+    >>> client.core.get_torrents_status({}, ['name'])
     {'79816060ea56d56f2a2148cd45705511079f9bca': {'name': 'TPB.AFK.2013.720p.h264-SimonKlose'}}
 
 
