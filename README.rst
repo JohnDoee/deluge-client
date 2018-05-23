@@ -3,6 +3,9 @@ Deluge Client
 .. image:: https://travis-ci.org/JohnDoee/deluge-client.svg
     :target: https://travis-ci.org/JohnDoee/deluge-client
 
+.. image:: https://ci.appveyor.com/api/projects/status/8s3g4uucg2xcay6v/branch/develop?svg=true
+    :target: https://ci.appveyor.com/project/AndersJensen/deluge-client
+
 A lightweight pure-python rpc client for deluge.
 Note, does not support events and any additional replies from deluge will mess up the datastream.
 
@@ -10,7 +13,7 @@ Requirements
 ------------
 
 - Deluge 1.3.x, 2.0 beta
-- Python 2.6, 2.7, 3.3, 3.4, 3.5
+- Python 2.7, 3.4, 3.5, 3.6
 
 Install
 -------
@@ -37,7 +40,7 @@ Usage
     True
     >>> client.call('core.get_torrents_status', {}, ['name'])
     {'79816060ea56d56f2a2148cd45705511079f9bca': {'name': 'TPB.AFK.2013.720p.h264-SimonKlose'}}
-    >>> client.core.get_torrents_status(['name'])
+    >>> client.core.get_torrents_status({}, ['name'])
     {'79816060ea56d56f2a2148cd45705511079f9bca': {'name': 'TPB.AFK.2013.720p.h264-SimonKlose'}}
 
 
