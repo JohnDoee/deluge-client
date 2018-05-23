@@ -2,6 +2,7 @@ import logging
 import socket
 import ssl
 import struct
+import warnings
 import zlib
 
 from .rencode import dumps, loads
@@ -47,6 +48,10 @@ class DelugeRPCClient(object):
         self.deluge_version = None
 
         self.decode_utf8 = decode_utf8
+        if not self.decode_utf8:
+            warnings.warn('Using `decode_utf8=False` is deprecated, please set it to True.'
+                          'The argument will be removed in a future release where it will be always True', DeprecationWarning)
+
         self.automatic_reconnect = automatic_reconnect
 
         self.request_id = 1
@@ -171,12 +176,20 @@ class DelugeRPCClient(object):
             if self.deluge_version == 2:
                 exception_type, exception_msg, _, traceback = data
                 # On deluge 2, exception arguments are sent as tuple
-                exception_msg = b', '.join(exception_msg)
+                if self.decode_utf8:
+                    exception_msg = ', '.join(exception_msg)
+                else:
+                    exception_msg = b', '.join(exception_msg)
             else:
                 exception_type, exception_msg, traceback = data[0]
-            exception = type(str(exception_type.decode('utf-8', 'ignore')), (RemoteException, ), {})
-            exception_msg = '%s\n%s' % (exception_msg.decode('utf-8', 'ignore'),
-                                          traceback.decode('utf-8', 'ignore'))
+            if self.decode_utf8:
+                exception = type(str(exception_type), (RemoteException, ), {})
+                exception_msg = '%s\n%s' % (exception_msg,
+                                            traceback)
+            else:
+                exception = type(str(exception_type.decode('utf-8', 'ignore')), (RemoteException, ), {})
+                exception_msg = '%s\n%s' % (exception_msg.decode('utf-8', 'ignore'),
+                                            traceback.decode('utf-8', 'ignore'))
             raise exception(exception_msg)
         elif msg_type == RPC_RESPONSE:
             retval = data[0]
