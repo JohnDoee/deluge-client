@@ -176,7 +176,10 @@ class DelugeRPCClient(object):
             if self.deluge_version == 2:
                 exception_type, exception_msg, _, traceback = data
                 # On deluge 2, exception arguments are sent as tuple
-                exception_msg = b', '.join(exception_msg)
+                if self.decode_utf8:
+                    exception_msg = ', '.join(exception_msg)
+                else:
+                    exception_msg = b', '.join(exception_msg)
             else:
                 exception_type, exception_msg, traceback = data[0]
             if self.decode_utf8:
