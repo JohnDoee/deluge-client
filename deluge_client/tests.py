@@ -11,7 +11,7 @@ if sys.version_info > (3,):
 
 
 @pytest.fixture
-def client():
+def client(request):
     if sys.platform.startswith('win'):
         auth_path = os.path.join(os.getenv('APPDATA'), 'deluge', 'auth')
     else:
@@ -23,7 +23,10 @@ def client():
     username, password = filedata[:2]
     ip = '127.0.0.1'
     port = 58846
-    client = DelugeRPCClient(ip, port, username, password)
+    kwargs = {'decode_utf8': True}
+    if hasattr(request, 'param'):
+        kwargs.update(request.param)
+    client = DelugeRPCClient(ip, port, username, password, **kwargs)
     client.connect()
 
     yield client
@@ -46,6 +49,10 @@ def test_call_method_arguments(client):
     assert isinstance(client.call('core.get_free_space', '/'), (int, long))
 
 
+@pytest.mark.parametrize('client',
+                         [{'decode_utf8': True}, {'decode_utf8': False}],
+                         ids=['decode_utf8_on', 'decode_utf8_off'],
+                         indirect=True)
 def test_call_method_exception(client):
     with pytest.raises(RemoteException) as ex_info:
         client.call('core.get_free_space', '1', '2')
