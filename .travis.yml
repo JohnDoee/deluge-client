@@ -5,7 +5,7 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install deluged -y
 install:
-  - pip install Twisted
+  - pip install Twisted[tls]
 before_script:
   - /usr/bin/deluged
   - sleep 5
