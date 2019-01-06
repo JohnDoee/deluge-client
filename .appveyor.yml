@@ -4,16 +4,16 @@ image:
 environment:
   matrix:
     - PY_DIR: "C:\\Python27"
-      PYTHON: 2.7
+      PYTHON: "2.7"
       DELUGE_VERSION: 1
     - PY_DIR: "C:\\Python27"
-      PYTHON: 2.7
+      PYTHON: "2.7"
       DELUGE_VERSION: 2
     - PY_DIR: "C:\\Python36"
-      PYTHON: 3.6
+      PYTHON: "3.6"
       DELUGE_VERSION: 1
     - PY_DIR: "C:\\Python36"
-      PYTHON: 3.6
+      PYTHON: "3.6"
       DELUGE_VERSION: 2
 
 for:
