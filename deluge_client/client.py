@@ -166,8 +166,9 @@ class DelugeRPCClient(object):
                     header = data[:MESSAGE_HEADER_SIZE]
                     data = data[MESSAGE_HEADER_SIZE:]
 
-                    if protocol_version is None and not header[0] == b'D'[0]:
-                        raise InvalidHeaderException('Expected D as first byte in reply')
+                    if protocol_version is None:
+                        if header[0] != b'D'[0]:
+                            raise InvalidHeaderException('Expected D as first byte in reply')
                     elif header[0] != protocol_version:
                         raise InvalidHeaderException(
                             'Expected protocol version ({}) as first byte in reply'.format(protocol_version)
