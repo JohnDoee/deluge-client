@@ -4,12 +4,16 @@ image:
 environment:
   matrix:
     - PY_DIR: "C:\\Python27"
+      PYTHON: 2.7
       DELUGE_VERSION: 1
     - PY_DIR: "C:\\Python27"
+      PYTHON: 2.7
       DELUGE_VERSION: 2
     - PY_DIR: "C:\\Python36"
+      PYTHON: 3.6
       DELUGE_VERSION: 1
     - PY_DIR: "C:\\Python36"
+      PYTHON: 3.6
       DELUGE_VERSION: 2
 
 for:
@@ -30,17 +34,8 @@ for:
       - sh: sudo add-apt-repository ppa:deluge-team/develop -y
       - sh: sudo apt-get -qq update
       - sh: sudo apt-get install deluged -y
-  -
-    matrix:
-      only:
-        - PY_DIR: "C:\\Python27"
-    stack: python 2.7
-  -
-    matrix:
-      only:
-        - PY_DIR: "C:\\Python36"
-    stack: python 3.6
 
+stack: python %PYTHON%
 
 build: off
 
