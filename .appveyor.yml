@@ -11,6 +11,7 @@ environment:
       DELUGE_VERSION: 1
     - PY_DIR: "C:\\Python36"
       DELUGE_VERSION: 2
+  APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5sdWdUg0eZmrf/n3Sj9NwNa5nDfvokaPGJAbPNpHX4l5vCJDbiBIVh4Q479Gk8mxqdz+gNwQvHepmVwJ6g/ZrqyDZ4wQLnpkOjh4l7jKOwKjdA9mxdABm4aNNTkCjCFOQj4d1X0Me5D9y7Hoswae9VqBVOGFQSHDJoX0YQZADwGJgJ1cecS3zLT73XpF+NhVnamkacmCicPvIJP2ROef2ZDirXLU2fruh66d8mfApJ5SsmIzAdErivoQA/ZqrtiomuA7j1abCaJMAWNCxjYPHv7LwHbuTxYYg1Tz4oobvtoDTdzEwd8OwllFduzGzxfOQ87s6qErk6S/+CsNNf4+h john
 
 for:
   -
@@ -45,6 +46,7 @@ for:
 build: off
 
 init:
+- sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 - cmd: set PATH=%PY_DIR%;%PY_DIR%\Scripts;%PATH%
 
 before_test:
