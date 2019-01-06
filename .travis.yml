@@ -3,9 +3,8 @@ sudo: required
 before_install:
   - if [ "$DELUGE_VERSION" == "2" ]; then sudo add-apt-repository ppa:deluge-team/develop -y; fi
   - sudo apt-get -qq update
-  - sudo apt-get install deluged -y
-install:
-  - pip install Twisted[tls]
+  - sudo apt-get install python3-pip deluged -y
+  - pip3 install Twisted[tls]
 before_script:
   - /usr/bin/deluged
   - sleep 5
