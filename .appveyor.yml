@@ -42,15 +42,15 @@ build: off
 
 init:
   - cmd: set PATH=%PY_DIR%;%PY_DIR%\Scripts;%PATH%
-  - python --version
 
 before_test:
   # For some reason we have to create the logfile first
   - ps: "if ($isWindows) {New-Item -Path 'C:\\Users\\appveyor\\AppData\\Roaming\\deluge' -ItemType Directory}"
   - ps: "if ($isWindows) {Start-Process \"c:\\Program Files (x86)\\Deluge\\deluged.exe\"}"
   - sh: /usr/bin/deluged
+  - python --version
   - cmd: pip install pytest
-  - sh: sudo pip install pytest
+  - sh: sudo python -m pip install pytest
   # Give deluged a chance to start
   - ps: "Start-Sleep -s 10"
 
