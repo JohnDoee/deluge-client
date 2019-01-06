@@ -29,6 +29,7 @@ for:
       only:
         - DELUGE_VERSION: 2
     install:
+      - python --version
       - cmd: appveyor DownloadFile http://download.deluge-torrent.org/2.0/deluge-2.0b1-win32-setup.exe
       - cmd: deluge-2.0b1-win32-setup.exe /S
       - sh: sudo add-apt-repository ppa:deluge-team/develop -y
@@ -40,7 +41,8 @@ stack: python %PYTHON%
 build: off
 
 init:
-- cmd: set PATH=%PY_DIR%;%PY_DIR%\Scripts;%PATH%
+  - cmd: set PATH=%PY_DIR%;%PY_DIR%\Scripts;%PATH%
+  - python --version
 
 before_test:
   # For some reason we have to create the logfile first
