@@ -119,7 +119,7 @@ class DelugeRPCClient(object):
             self.deluge_protocol_version = None
             # If we need the specific version of deluge 2, this is it.
             daemon_version = self._receive_response(2, None, partial_data=result)
-        elif result[0] == 1:
+        elif ord(result[:1]) == 1:
             self.deluge_version = 2
             self.deluge_protocol_version = 1
             # If we need the specific version of deluge 2, this is it.
@@ -169,7 +169,7 @@ class DelugeRPCClient(object):
                     if protocol_version is None:
                         if header[0] != b'D'[0]:
                             raise InvalidHeaderException('Expected D as first byte in reply')
-                    elif header[0] != protocol_version:
+                    elif ord(header[:1]) != protocol_version:
                         raise InvalidHeaderException(
                             'Expected protocol version ({}) as first byte in reply'.format(protocol_version)
                         )
