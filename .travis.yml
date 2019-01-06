@@ -1,3 +1,4 @@
+dist: xenial
 sudo: required
 before_install:
   - if [ "$DELUGE_VERSION" == "2" ]; then sudo add-apt-repository ppa:deluge-team/develop -y; fi
