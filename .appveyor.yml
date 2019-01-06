@@ -52,7 +52,8 @@ before_test:
   - ps: "if ($isWindows) {New-Item -Path 'C:\\Users\\appveyor\\AppData\\Roaming\\deluge' -ItemType Directory}"
   - ps: "if ($isWindows) {Start-Process \"c:\\Program Files (x86)\\Deluge\\deluged.exe\"}"
   - sh: /usr/bin/deluged
-  - pip install pytest
+  - cmd: pip install pytest
+  - sh: sudo pip install pytest
   # Give deluged a chance to start
   - ps: "Start-Sleep -s 10"
 
