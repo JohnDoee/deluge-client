@@ -50,7 +50,7 @@ before_test:
   - sh: /usr/bin/deluged
   - python --version
   - cmd: pip install pytest
-  - sh: sudo python -m pip install pytest
+  - sh: python -m pip install -U pytest
   # Give deluged a chance to start
   - ps: "Start-Sleep -s 10"
 
