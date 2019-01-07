@@ -56,7 +56,8 @@ def test_call_method_arguments(client):
 def test_call_method_exception(client):
     with pytest.raises(RemoteException) as ex_info:
         client.call('core.get_free_space', '1', '2')
-    assert 'takes at most 2 arguments' in str(ex_info.value)
+    assert ('takes at most 2 arguments' in str(ex_info.value) or
+            'takes from 1 to 2 positional arguments' in str(ex_info.value))  # deluge 2.0
 
 
 def test_attr_caller(client):
