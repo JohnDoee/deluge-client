@@ -17,23 +17,27 @@ READ_SIZE = 10
 logger = logging.getLogger(__name__)
 
 
-class ConnectionLostException(Exception):
+class DelugeClientException(Exception):
+    """Base exception for all deluge client exceptions"""
+
+
+class ConnectionLostException(DelugeClientException):
     pass
 
 
-class CallTimeoutException(Exception):
+class CallTimeoutException(DelugeClientException):
     pass
 
 
-class InvalidHeaderException(Exception):
+class InvalidHeaderException(DelugeClientException):
     pass
 
 
-class FailedToReconnectException(Exception):
+class FailedToReconnectException(DelugeClientException):
     pass
 
 
-class RemoteException(Exception):
+class RemoteException(DelugeClientException):
     pass
 
 
