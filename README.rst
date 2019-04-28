@@ -1,8 +1,5 @@
 Deluge Client
 =============
-.. image:: https://travis-ci.org/JohnDoee/deluge-client.svg
-    :target: https://travis-ci.org/JohnDoee/deluge-client
-
 .. image:: https://ci.appveyor.com/api/projects/status/8s3g4uucg2xcay6v/branch/develop?svg=true
     :target: https://ci.appveyor.com/project/AndersJensen/deluge-client
 

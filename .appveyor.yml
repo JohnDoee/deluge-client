@@ -1,12 +1,19 @@
+image:
+  - ubuntu1804
+  - Visual Studio 2015
 environment:
   matrix:
-    - PYTHON: "C:\\Python27"
+    - PY_DIR: "C:\\Python27"
+      PYTHON: "2.7"
       DELUGE_VERSION: 1
-    - PYTHON: "C:\\Python27"
+    - PY_DIR: "C:\\Python27"
+      PYTHON: "2.7"
       DELUGE_VERSION: 2
-    - PYTHON: "C:\\Python36"
+    - PY_DIR: "C:\\Python36"
+      PYTHON: "3.6"
       DELUGE_VERSION: 1
-    - PYTHON: "C:\\Python36"
+    - PY_DIR: "C:\\Python36"
+      PYTHON: "3.6"
       DELUGE_VERSION: 2
 
 for:
@@ -15,28 +22,42 @@ for:
       only:
         - DELUGE_VERSION: 1
     install:
-      - choco install deluge --version=1.3.15
+      - cmd: choco install deluge --version=1.3.15
+      - sh: sudo apt-get install deluged -y
   -
     matrix:
       only:
         - DELUGE_VERSION: 2
     install:
-      - appveyor DownloadFile http://download.deluge-torrent.org/2.0/deluge-2.0b1-win32-setup.exe
-      - deluge-2.0b1-win32-setup.exe /S
+      - python --version
+      - cmd: appveyor DownloadFile http://download.deluge-torrent.org/2.0/deluge-2.0b1-win32-setup.exe
+      - cmd: deluge-2.0b1-win32-setup.exe /S
+      - sh: sudo add-apt-repository ppa:deluge-team/develop -y
+      - sh: sudo apt-get -qq update
+      - sh: sudo apt-get install deluged -y
+
+stack: python %PYTHON%
 
 build: off
 
+init:
+  - cmd: set PATH=%PY_DIR%;%PY_DIR%\Scripts;%PATH%
+
 before_test:
   # For some reason we have to create the logfile first
-  - ps: "New-Item -Path 'C:\\Users\\appveyor\\AppData\\Roaming\\deluge' -ItemType Directory"
-  - ps: "Start-Process \"c:\\Program Files (x86)\\Deluge\\deluged.exe\""
-  - "%PYTHON%\\Scripts\\pip.exe install pytest"
+  - ps: "if ($isWindows) {New-Item -Path 'C:\\Users\\appveyor\\AppData\\Roaming\\deluge' -ItemType Directory}"
+  - cmd: '"c:\Program Files (x86)\Deluge\deluged.exe" --version'
+  - ps: "if ($isWindows) {Start-Process \"c:\\Program Files (x86)\\Deluge\\deluged.exe\"}"
+  - sh: /usr/bin/deluged --version
+  - sh: /usr/bin/deluged
+  - python --version
+  - pip install -U pytest
   # Give deluged a chance to start
   - ps: "Start-Sleep -s 10"
 
 test_script:
-  - "%PYTHON%\\Scripts\\pytest.exe"
+  - pytest
 
 on_failure:
   # Print the deluged log file to help debug problems
-  - "type C:\\Users\\appveyor\\AppData\\Roaming\\deluge\\deluged.log"
+  - cmd: "type C:\\Users\\appveyor\\AppData\\Roaming\\deluge\\deluged.log"
