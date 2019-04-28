@@ -133,7 +133,13 @@ class DelugeRPCClient(object):
 
     def _send_call(self, deluge_version, protocol_version, method, *args, **kwargs):
         self.request_id += 1
-        logger.debug('Calling reqid %s method %r with args:%r kwargs:%r' % (self.request_id, method, args, kwargs))
+        if method == 'daemon.login':
+            debug_args = list(args)
+            if len(debug_args) >= 2:
+                debug_args[1] = '<password hidden>'
+            logger.debug('Calling reqid %s method %r with args:%r kwargs:%r' % (self.request_id, method, debug_args, kwargs))
+        else:
+            logger.debug('Calling reqid %s method %r with args:%r kwargs:%r' % (self.request_id, method, args, kwargs))
 
         req = ((self.request_id, method, args, kwargs), )
         req = zlib.compress(dumps(req))
