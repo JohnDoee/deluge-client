@@ -33,6 +33,7 @@ def client_factory(**kw):
 @pytest.fixture
 def client(request):
     client = client_factory(**getattr(request, 'param', {}))
+    client.connect()
     yield client
 
     try:
