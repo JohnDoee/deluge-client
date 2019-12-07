@@ -69,6 +69,6 @@ def test_attr_caller(client):
     assert isinstance(client.core.get_free_space('/'), (int, long))
 
 
-def test_call_method_context_manager(client):
+def test_call_method_context_manager():
     with client_factory() as client:
         assert isinstance(client.call('core.get_free_space'), (int, long))
