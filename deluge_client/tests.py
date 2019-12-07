@@ -10,7 +10,7 @@ if sys.version_info > (3,):
     long = int
 
 
-def client_factory():
+def client_factory(**kw):
     """Create a disconnected client for test purposes."""
     if sys.platform.startswith('win'):
         auth_path = os.path.join(os.getenv('APPDATA'), 'deluge', 'auth')
@@ -24,15 +24,15 @@ def client_factory():
     ip = '127.0.0.1'
     port = 58846
     kwargs = {'decode_utf8': True}
-    if hasattr(request, 'param'):
-        kwargs.update(request.param)
+    if kw:
+        kwargs.update(kw)        
     client = DelugeRPCClient(ip, port, username, password, **kwargs)
     return client
 
 
 @pytest.fixture
 def client(request):
-    client = client_factory()
+    client = client_factory(**getattr(request, 'param', {}))
     yield client
 
     try:
@@ -69,6 +69,6 @@ def test_attr_caller(client):
     assert isinstance(client.core.get_free_space('/'), (int, long))
 
 
-def test_call_method_context_manager(contextclient):
+def test_call_method_context_manager(client):
     with client_factory() as client:
         assert isinstance(client.call('core.get_free_space'), (int, long))
