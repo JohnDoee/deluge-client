@@ -13,7 +13,7 @@ def read_description():
 
 setup(
     name='deluge-client',
-    version='1.7.1',
+    version='1.8.0',
     description='Simple Deluge Client',
     long_description=read_description(),
     author='Anders Jensen',

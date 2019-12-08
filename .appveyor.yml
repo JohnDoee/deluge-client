@@ -30,7 +30,7 @@ for:
         - DELUGE_VERSION: 2
     install:
       - python --version
-      - cmd: appveyor DownloadFile http://download.deluge-torrent.org/2.0/deluge-2.0b1-win32-setup.exe
+      - cmd: appveyor DownloadFile http://download.deluge-torrent.org/archive/2.0/deluge-2.0b1-win32-setup.exe
       - cmd: deluge-2.0b1-win32-setup.exe /S
       - sh: sudo add-apt-repository ppa:deluge-team/develop -y
       - sh: sudo apt-get -qq update
