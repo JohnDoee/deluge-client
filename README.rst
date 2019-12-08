@@ -40,6 +40,16 @@ Usage
     >>> client.core.get_torrents_status({}, ['name'])
     {'79816060ea56d56f2a2148cd45705511079f9bca': {'name': 'TPB.AFK.2013.720p.h264-SimonKlose'}}
 
+It is also usable as a context manager.
+
+::
+
+    >>> from deluge_client import DelugeRPCClient
+
+    >>> with DelugeRPCClient('127.0.0.1', 12345, 'username', 'password') as client:
+    ...     client.call('core.get_torrents_status', {}, ['name'])
+    {'79816060ea56d56f2a2148cd45705511079f9bca': {'name': 'TPB.AFK.2013.720p.h264-SimonKlose'}}
+
 
 Idiom to use for automatic reconnect where the daemon might be offline at call time.
 ::
@@ -65,6 +75,17 @@ Idiom usage
     # otherwise you must handle that yourself.
     client.connect()
     call_retry(client, 'core.get_torrents_status', {}, ['name'])
+
+
+List of Deluge RPC commands
+---------------------------
+
+Sadly, this part isn't well documented. Your best bet is to check out the source code and try to figure
+out what you need. The commands are namespaced so the commands you mostly need, core commands, are prefixed
+with a :code:`core.` - Check out `this search <https://github.com/deluge-torrent/deluge/search?l=Python&q=%22%40export%22>`_ for all commands
+and `core.py <https://github.com/deluge-torrent/deluge/blob/develop/deluge/core/core.py>`_ for core commands.
+
+The exported commands are decorated with `@export`.
 
 License
 -------
