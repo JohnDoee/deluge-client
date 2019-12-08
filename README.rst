@@ -85,7 +85,7 @@ out what you need. The commands are namespaced so the commands you mostly need, 
 with a :code:`core.` - Check out `this search <https://github.com/deluge-torrent/deluge/search?l=Python&q=%22%40export%22>`_ for all commands
 and `core.py <https://github.com/deluge-torrent/deluge/blob/develop/deluge/core/core.py>`_ for core commands.
 
-The exported commands are decorated with `@export`.
+The exported commands are decorated with :code:`@export`.
 
 License
 -------
