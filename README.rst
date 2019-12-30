@@ -87,6 +87,11 @@ and `core.py <https://github.com/deluge-torrent/deluge/blob/develop/deluge/core/
 
 The exported commands are decorated with :code:`@export`.
 
+You can also get a list of exported commands by calling the :code:`daemon.get_method_list` method:
+::
+
+    client.call('daemon.get_method_list')
+
 License
 -------
 
