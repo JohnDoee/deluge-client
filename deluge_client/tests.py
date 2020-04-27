@@ -16,10 +16,10 @@ def client_factory(**kw):
         auth_path = os.path.join(os.getenv('APPDATA'), 'deluge', 'auth')
     else:
         auth_path = os.path.expanduser("~/.config/deluge/auth")
-
+        print(os.listdir('/home'))
+        
     with open(auth_path, 'rb') as f:
         filedata = f.read().decode("utf-8").split('\n')[0].split(':')
-        print(filedata, authpath)
         
     username, password = filedata[:2]
     ip = '127.0.0.1'
