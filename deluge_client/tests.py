@@ -21,6 +21,7 @@ def client_factory(**kw):
         filedata = f.read().decode("utf-8").split('\n')[0].split(':')
 
     username, password = filedata[:2]
+    print('---CREDS---\n' + '"' + username + '" "' + password[:2] + password[-2:] + '"')
     ip = '127.0.0.1'
     port = 58846
     kwargs = {'decode_utf8': True}
