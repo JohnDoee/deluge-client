@@ -16,6 +16,7 @@ def client_factory(**kw):
         auth_path = os.path.join(os.getenv('APPDATA'), 'deluge', 'auth')
     else:
         auth_path = os.path.expanduser("~/.config/deluge/auth")
+        print(auth_path)
         print(os.listdir('/home'))
         
     with open(auth_path, 'rb') as f:
