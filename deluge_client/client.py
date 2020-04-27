@@ -4,6 +4,7 @@ import ssl
 import struct
 import warnings
 import zlib
+import io
 import os
 import platform
 from functools import wraps
@@ -354,13 +355,13 @@ class LocalDelugeRPCClient(DelugeRPCClient):
 
 
         if os.path.exists(auth_file):
-            for line in open(auth_file, encoding='utf8'):
+            for line in io.open(auth_file, encoding='utf-8'):
                 line = line.strip()
-                if line.startswith('#') or not line:
+                if line.startswith(u'#') or not line:
                     # This is a comment or blank line
                     continue
 
-                lsplit = line.split(':')
+                lsplit = line.split(u':')
 
                 if len(lsplit) == 2:
                     username, password = lsplit
@@ -369,7 +370,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
                 else:
                     continue
 
-                if username == 'localclient':
+                if username == u'localclient':
                     local_username, local_password = username, password
 
         return local_username, local_password
