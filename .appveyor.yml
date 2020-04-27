@@ -56,7 +56,7 @@ before_test:
   - ps: "Start-Sleep -s 10"
 
 test_script:
-  - pytest --show-capture=all
+  - pytest -s
 
 on_failure:
   # Print the deluged log file to help debug problems
