@@ -265,11 +265,11 @@ class DelugeRPCClient(object):
     def __enter__(self):
         """Connect to client while using with statement."""
         self.connect()
+        return self
 
     def __exit__(self, type, value, traceback):
         """Disconnect from client at end of with statement."""
         self.disconnect()
-        return self
 
 class RPCCaller(object):
     def __init__(self, caller, method=''):
