@@ -324,51 +324,24 @@ class LocalDelugeRPCClient(DelugeRPCClient):
 
     @_cache_thread_local
     def _get_local_auth(self):
-        auth_file = ''
+        auth_path = ''
         local_username = local_password = ''
+
         os_family = platform.system()
-        if os_family in ('Windows', 'Microsoft'):
+        if os_family in 'Windows':
             app_data_path = os.environ.get('APPDATA')
-            if not app_data_path:
-                try:
-                    import winreg
-                except ImportError:
-                    import _winreg as winreg
+            auth_path = os.path.join(app_data_path, 'deluge', 'auth')
+        elif os_family in 'Linux':
+            config_path = os.path.expanduser(DEFAULT_DELUGE_CONFIG_PATH)
+            auth_path = os.path.join(config_path, 'auth')
 
-                hkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, HKEY_PATH)
-                app_data_reg = winreg.QueryValueEx(hkey, 'AppData')
-                app_data_path = app_data_reg[0]
-                winreg.CloseKey(hkey)
-
-            auth_file = os.path.join(app_data_path, 'deluge', 'auth')
-        elif os_family in ('Linux', ):
-            try:
-                from xdg.BaseDirectory import save_config_path
-                config_path = save_config_path('deluge')
-            except ImportError:
-                config_path = os.path.expanduser(DEFAULT_DELUGE_CONFIG_PATH)
-
-            try:
-                auth_file = os.path.join(config_path, 'auth')
-            except OSError:
-                pass
-
-
-        if os.path.exists(auth_file):
-            for line in io.open(auth_file, 'rb', encoding='utf-8'):
-                if line.startswith('#') or not line:
-                    # This is a comment or blank line
+        if os.path.exists(auth_path):
+            for line in open(auth_path, 'r'):
+                auth_data = line.split(':')
+                if len(auth_data) < 2:
                     continue
 
-                lsplit = line.split(':')
-
-                if len(lsplit) == 2:
-                    username, password = lsplit
-                elif len(lsplit) == 3:
-                    username, password, level = lsplit
-                else:
-                    continue
-
+                username, password = auth_data[:2]
                 if username == 'localclient':
                     local_username, local_password = username, password
 
