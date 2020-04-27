@@ -322,10 +322,9 @@ class LocalDelugeRPCClient(DelugeRPCClient):
 
     @_cache_thread_local
     def _get_local_auth(self):
-        auth_path = ''
-        local_username = local_password = ''
-
+        auth_path = local_username = local_password = ''
         os_family = platform.system()
+
         if os_family == 'Windows':
             app_data_path = os.environ.get('APPDATA')
             auth_path = os.path.join(app_data_path, 'deluge', 'auth')
@@ -334,17 +333,18 @@ class LocalDelugeRPCClient(DelugeRPCClient):
             auth_path = os.path.join(config_path, 'auth')
 
         if os.path.exists(auth_path):
-            for line in io.open(auth_path, 'r', encoding='utf-8'):
-                if not line or line.startswith('#'):
-                    continue
+            with io.open(auth_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    if not line or line.startswith('#'):
+                        continue
 
-                auth_data = line.split(':')
-                if len(auth_data) < 2:
-                    continue
+                    auth_data = line.split(':')
+                    if len(auth_data) < 2:
+                        continue
 
-                username, password = auth_data[:2]
-                if username == 'localclient':
-                    local_username, local_password = username, password
-                    break
+                    username, password = auth_data[:2]
+                    if username == 'localclient':
+                        local_username, local_password = username, password
+                        break
 
         return local_username, local_password
