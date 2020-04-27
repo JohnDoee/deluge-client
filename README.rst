@@ -81,6 +81,8 @@ Idiom usage
     client.connect()
     call_retry(client, 'core.get_torrents_status', {}, ['name'])
     # or if you have local Deluge instance, you can use the local client
+    # LocalDelugeRPCClient accepts the same parameters, but username and password can be omitted
+    from deluge_client import LocalDelugeRPCClient
     localclient = LocalDelugeRPCClient()
     localclient.connect()
 
