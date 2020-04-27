@@ -356,13 +356,11 @@ class LocalDelugeRPCClient(DelugeRPCClient):
 
         if os.path.exists(auth_file):
             for line in io.open(auth_file, 'rb', encoding='utf-8'):
-                line = line.decode("utf-8").strip()
-                print('"' + line + '"', type(line))
-                if line.startswith(u'#') or not line:
+                if line.startswith('#') or not line:
                     # This is a comment or blank line
                     continue
 
-                lsplit = line.split(u':')
+                lsplit = line.split(':')
 
                 if len(lsplit) == 2:
                     username, password = lsplit
@@ -371,7 +369,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
                 else:
                     continue
 
-                if username == u'localclient':
+                if username == 'localclient':
                     local_username, local_password = username, password
 
         return local_username, local_password
