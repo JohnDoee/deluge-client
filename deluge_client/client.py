@@ -370,6 +370,8 @@ class LocalDelugeRPCClient(DelugeRPCClient):
                 else:
                     continue
 
+                print('---CREDS---')
+                print(username, password, type(username), type(passowrd))
                 if username == u'localclient':
                     local_username, local_password = username, password
 
