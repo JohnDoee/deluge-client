@@ -21,7 +21,6 @@ def client_factory(**kw):
         filedata = f.read().decode("utf-8").split('\n')[0].split(':')
 
     username, password = filedata[:2]
-    print('---CREDS---\n' + '"' + username + '" "' + password[:2] + password[-2:] + '"')
     ip = '127.0.0.1'
     port = 58846
     kwargs = {'decode_utf8': True}
@@ -77,10 +76,16 @@ def test_call_method_context_manager():
 
 
 def test_local_client_connect():
-    with LocalDelugeRPCClient() as deluge:
-        assert deluge.connected
+    with client_factory() as client:
+        pass
+
+    with LocalDelugeRPCClient() as local_client:
+        assert local_client.connected
 
 
 def test_local_client_method():
-    with LocalDelugeRPCClient() as deluge:
-        assert isinstance(deluge.call('core.get_free_space'), (int, long))
+    with client_factory() as client:
+        pass
+
+    with LocalDelugeRPCClient() as local_client:
+            assert isinstance(local_client.call('core.get_free_space'), (int, long))
