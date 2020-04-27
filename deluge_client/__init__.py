@@ -1,3 +1,3 @@
 from .client import (
-    LocalDelugeRPCClient, DelugeRPCClient, FailedToReconnectException
+    DelugeRPCClient, LocalDelugeRPCClient, FailedToReconnectException
 )
