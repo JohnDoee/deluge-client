@@ -12,9 +12,7 @@ from threading import local as thread_local
 from .rencode import dumps, loads
 
 
-DEFAULT_DELUGE_CONFIG_PATH = '~/.config/deluge/auth'
-HKEY_PATH = \
-    'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
+DEFAULT_LINUX_CONFIG_DIR_PATH = '~/.config/deluge'
 RPC_RESPONSE = 1
 RPC_ERROR = 2
 RPC_EVENT = 3
@@ -328,24 +326,25 @@ class LocalDelugeRPCClient(DelugeRPCClient):
         local_username = local_password = ''
 
         os_family = platform.system()
-        if os_family in 'Windows':
+        if os_family == 'Windows':
             app_data_path = os.environ.get('APPDATA')
             auth_path = os.path.join(app_data_path, 'deluge', 'auth')
-        elif os_family in 'Linux':
-            config_path = os.path.expanduser(DEFAULT_DELUGE_CONFIG_PATH)
+        elif os_family == 'Linux':
+            config_path = os.path.expanduser(DEFAULT_LINUX_CONFIG_DIR_PATH)
             auth_path = os.path.join(config_path, 'auth')
 
-        print('----- ' + auth_path)
         if os.path.exists(auth_path):
             for line in open(auth_path, 'r'):
-                print('----- ' + auth_path)
+                if not line or line.startswith('#'):
+                    continue
+
                 auth_data = line.split(':')
                 if len(auth_data) < 2:
                     continue
 
                 username, password = auth_data[:2]
-                print('----- ', username, type(username))
-                if username in 'localclient':
+                if username == 'localclient':
                     local_username, local_password = username, password
+                    break
 
         return local_username, local_password
