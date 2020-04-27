@@ -334,7 +334,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
             auth_path = os.path.join(config_path, 'auth')
 
         if os.path.exists(auth_path):
-            for line in open(auth_path, 'r'):
+            for line in io.open(auth_path, 'r', encoding='utf-8'):
                 if not line or line.startswith('#'):
                     continue
 
