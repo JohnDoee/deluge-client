@@ -344,7 +344,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
             try:
                 from xdg.BaseDirectory import save_config_path
                 config_path = save_config_path('deluge')
-            except (ImportError, OSError):
+            except ImportError:
                 config_path = os.path.expanduser(DEFAULT_DELUGE_CONFIG_PATH)
 
             try:
@@ -354,15 +354,13 @@ class LocalDelugeRPCClient(DelugeRPCClient):
 
 
         if os.path.exists(auth_file):
-            for line in open(auth_file):
-                if line.startswith('#'):
-                    # This is a comment line
-                    continue
+            for line in open(auth_file, encoding='utf8'):
                 line = line.strip()
-                try:
-                    lsplit = line.split(':')
-                except Exception as e:
+                if line.startswith('#') or not line:
+                    # This is a comment or blank line
                     continue
+
+                lsplit = line.split(':')
 
                 if len(lsplit) == 2:
                     username, password = lsplit
@@ -373,6 +371,5 @@ class LocalDelugeRPCClient(DelugeRPCClient):
 
                 if username == 'localclient':
                     local_username, local_password = username, password
-                    break
 
         return local_username, local_password
