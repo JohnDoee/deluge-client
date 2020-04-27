@@ -299,7 +299,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
         port=58846,
         username='',
         password='',
-        decode_utf8=False,
+        decode_utf8=True,
         automatic_reconnect=True
     ):
         if (
@@ -355,8 +355,9 @@ class LocalDelugeRPCClient(DelugeRPCClient):
 
 
         if os.path.exists(auth_file):
-            for line in io.open(auth_file, encoding='utf-8'):
-                line = line.strip()
+            for line in io.open(auth_file, 'rb', encoding='utf-8'):
+                line = line.decode("utf-8").strip()
+                print('"' + line + '"', type(line))
                 if line.startswith(u'#') or not line:
                     # This is a comment or blank line
                     continue
@@ -370,8 +371,6 @@ class LocalDelugeRPCClient(DelugeRPCClient):
                 else:
                     continue
 
-                print('---CREDS---')
-                print(username, password, type(username), type(passowrd))
                 if username == u'localclient':
                     local_username, local_password = username, password
 
