@@ -335,14 +335,17 @@ class LocalDelugeRPCClient(DelugeRPCClient):
             config_path = os.path.expanduser(DEFAULT_DELUGE_CONFIG_PATH)
             auth_path = os.path.join(config_path, 'auth')
 
+        print('----- ' + auth_path)
         if os.path.exists(auth_path):
             for line in open(auth_path, 'r'):
+                print('----- ' + auth_path)
                 auth_data = line.split(':')
                 if len(auth_data) < 2:
                     continue
 
                 username, password = auth_data[:2]
-                if username == 'localclient':
+                print('----- ', username, type(username))
+                if username in 'localclient':
                     local_username, local_password = username, password
 
         return local_username, local_password
