@@ -10,6 +10,8 @@ from functools import wraps
 from threading import local as thread_local
 from .rencode import dumps, loads
 
+
+DEFAULT_DELUGE_CONFIG_PATH = '~/.config/deluge/auth'
 HKEY_PATH = \
     'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
 RPC_RESPONSE = 1
@@ -305,7 +307,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
         ):
             username, password = self._get_local_auth()
 
-        super().__init__(
+        super(LocalDelugeRPCClient, self).__init__(
             host, port, username, password, decode_utf8, automatic_reconnect
         )
 
@@ -325,7 +327,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
         local_username = local_password = ''
         os_family = platform.system()
         if os_family in ('Windows', 'Microsoft'):
-            app_data_path = os.environ.get("APPDATA")
+            app_data_path = os.environ.get('APPDATA')
             if not app_data_path:
                 try:
                     import winreg
@@ -333,26 +335,32 @@ class LocalDelugeRPCClient(DelugeRPCClient):
                     import _winreg as winreg
 
                 hkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, HKEY_PATH)
-                app_data_reg = winreg.QueryValueEx(hkey, "AppData")
+                app_data_reg = winreg.QueryValueEx(hkey, 'AppData')
                 app_data_path = app_data_reg[0]
                 winreg.CloseKey(hkey)
 
-            auth_file = os.path.join(app_data_path, "deluge", "auth")
+            auth_file = os.path.join(app_data_path, 'deluge', 'auth')
         elif os_family in ('Linux', ):
             try:
                 from xdg.BaseDirectory import save_config_path
-                auth_file = os.path.join(save_config_path("deluge"), "auth")
+                config_path = save_config_path('deluge')
             except (ImportError, OSError):
+                config_path = os.path.expanduser(DEFAULT_DELUGE_CONFIG_PATH)
+
+            try:
+                auth_file = os.path.join(config_path, 'auth')
+            except OSError:
                 pass
+
 
         if os.path.exists(auth_file):
             for line in open(auth_file):
-                if line.startswith("#"):
+                if line.startswith('#'):
                     # This is a comment line
                     continue
                 line = line.strip()
                 try:
-                    lsplit = line.split(":")
+                    lsplit = line.split(':')
                 except Exception as e:
                     continue
 
@@ -363,7 +371,7 @@ class LocalDelugeRPCClient(DelugeRPCClient):
                 else:
                     continue
 
-                if username == "localclient":
+                if username == 'localclient':
                     local_username, local_password = username, password
                     break
 
