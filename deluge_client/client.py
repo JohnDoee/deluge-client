@@ -291,6 +291,7 @@ class RPCCaller(object):
 
 
 class LocalDelugeRPCClient(DelugeRPCClient):
+    """Client with auto discovery for the default local credentials"""
     def __init__(
         self,
         host='127.0.0.1',
