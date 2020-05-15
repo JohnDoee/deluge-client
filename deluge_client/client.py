@@ -326,10 +326,10 @@ class LocalDelugeRPCClient(DelugeRPCClient):
         auth_path = local_username = local_password = ''
         os_family = platform.system()
 
-        if os_family == 'Windows':
+        if 'Windows' in os_family or 'CYGWIN' in os_family:
             app_data_path = os.environ.get('APPDATA')
             auth_path = os.path.join(app_data_path, 'deluge', 'auth')
-        elif os_family == 'Linux':
+        elif 'Linux' in os_family:
             config_path = os.path.expanduser(DEFAULT_LINUX_CONFIG_DIR_PATH)
             auth_path = os.path.join(config_path, 'auth')
 
