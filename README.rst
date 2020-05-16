@@ -10,24 +10,27 @@ Requirements
 ------------
 
 - Deluge 1.3.x, 2.0 beta
-- Python 2.7, 3.4, 3.5, 3.6
+- Python 2.7, 3.5, 3.6, 3.7
 
 Install
 -------
 
 From GitHub (develop):
-::
+
+.. code-block:: bash
 
     pip install git+https://github.com/JohnDoee/deluge-client.git#develop
 
 From PyPi (stable):
-::
+
+.. code-block:: bash
 
     pip install deluge-client
 
 Usage
 -----
-::
+
+.. code-block:: python
 
     >>> from deluge_client import DelugeRPCClient
 
@@ -42,7 +45,7 @@ Usage
 
 It is also usable as a context manager.
 
-::
+.. code-block:: python
 
     >>> from deluge_client import DelugeRPCClient
 
@@ -52,7 +55,8 @@ It is also usable as a context manager.
 
 
 Idiom to use for automatic reconnect where the daemon might be offline at call time.
-::
+
+.. code-block:: python
 
     import time
 
@@ -68,13 +72,19 @@ Idiom to use for automatic reconnect where the daemon might be offline at call t
                 time.sleep(5)
 
 Idiom usage
-::
+
+.. code-block:: python
 
     client = DelugeRPCClient('127.0.0.1', 58846, 'username', 'password', automatic_reconnect=True)
     # The client has to be online when you start the process,
     # otherwise you must handle that yourself.
     client.connect()
     call_retry(client, 'core.get_torrents_status', {}, ['name'])
+    # or if you have local Deluge instance, you can use the local client
+    # LocalDelugeRPCClient accepts the same parameters, but username and password can be omitted
+    from deluge_client import LocalDelugeRPCClient
+    localclient = LocalDelugeRPCClient()
+    localclient.connect()
 
 
 List of Deluge RPC commands
@@ -85,7 +95,15 @@ out what you need. The commands are namespaced so the commands you mostly need, 
 with a :code:`core.` - Check out `this search <https://github.com/deluge-torrent/deluge/search?l=Python&q=%22%40export%22>`_ for all commands
 and `core.py <https://github.com/deluge-torrent/deluge/blob/develop/deluge/core/core.py>`_ for core commands.
 
-The exported commands are decorated with `@export`.
+The exported commands are decorated with :code:`@export`.
+
+You can also get a list of exported commands by calling the :code:`daemon.get_method_list` method:
+
+.. code-block:: python
+
+    client.call('daemon.get_method_list')
+    # or
+    client.daemon.get_method_list()
 
 License
 -------
