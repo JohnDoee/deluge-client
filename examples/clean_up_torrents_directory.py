@@ -16,14 +16,14 @@ dir_list = os.listdir(cleanup_path)
 print(f"{len(dir_list)} items in {cleanup_path} before clean-up.")
 
 # Get a list of torrents, containing 'name' and 'download_location' only
-torrents = client.core.get_torrents_status({}, ['name', 'download_location'])
+torrents_list = client.core.get_torrents_status({}, ['name', 'download_location'])
 
-# This is the data structure in torrents:
+# This is the data structure in torrents_list:
 '''
 >>> print(list(torrents.items())[0])
 (b'9876543210987654321098765432109876543210', {b'download_location': b'/downloads/tv', b'name': b'My.TV.Show.S02E06.1080p.WEB.h264-SUPER'})
 '''
-for id, data in torrents.items():
+for id, data in torrents_list.items():
     for key, val in data.items():
         if key.decode() == "name":
             if val.decode() in dir_list:
