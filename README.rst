@@ -86,6 +86,11 @@ Idiom usage
     localclient = LocalDelugeRPCClient()
     localclient.connect()
 
+Examples
+--------
+
+There's an example of how you might use this client in the `examples </examples>`_ directory
+
 
 List of Deluge RPC commands
 ---------------------------
