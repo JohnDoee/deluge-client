@@ -173,6 +173,9 @@ class DelugeRPCClient(object):
             except ssl.SSLError:
                 raise CallTimeoutException()
 
+            if len(d) == 0:
+                raise ConnectionLostException()
+
             data += d
             if deluge_version == 2:
                 if expected_bytes is None:
