@@ -1,6 +1,6 @@
 image:
-  - ubuntu1804
-  - Visual Studio 2015
+  - ubuntu2004
+  - Visual Studio 2022
 environment:
   matrix:
     - PY_DIR: "C:\\Python27"
@@ -14,6 +14,12 @@ environment:
       DELUGE_VERSION: 1
     - PY_DIR: "C:\\Python36"
       PYTHON: "3.6"
+      DELUGE_VERSION: 2
+    - PY_DIR: "C:\\Python312"
+      PYTHON: "3.12"
+      DELUGE_VERSION: 1
+    - PY_DIR: "C:\\Python312"
+      PYTHON: "3.12"
       DELUGE_VERSION: 2
 
 for:
@@ -30,8 +36,8 @@ for:
         - DELUGE_VERSION: 2
     install:
       - python --version
-      - cmd: appveyor DownloadFile http://download.deluge-torrent.org/archive/2.0/deluge-2.0b1-win32-setup.exe
-      - cmd: deluge-2.0b1-win32-setup.exe /S
+      - cmd: appveyor DownloadFile https://ftp.osuosl.org/pub/deluge/windows/deluge-2.1.1-win32-setup.exe
+      - cmd: deluge-2.1.1-win32-setup.exe /S
       - sh: sudo add-apt-repository ppa:deluge-team/develop -y
       - sh: sudo apt-get -qq update
       - sh: sudo apt-get install deluged -y
