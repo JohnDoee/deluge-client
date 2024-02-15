@@ -1,6 +1,6 @@
 image:
-  - ubuntu2004
-  - Visual Studio 2022
+  - ubuntu2204
+  - Visual Studio 2019
 environment:
   matrix:
     - PY_DIR: "C:\\Python27"
