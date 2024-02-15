@@ -2,6 +2,13 @@
 Changelog
 ================================
 
+Version 1.10.0 (15-02-2024)
+--------------------------------
+
+* Added: Python 3.12 support
+
+* Removed: Old and EOLed python version support
+
 Version 1.9.0 (16-05-2020)
 --------------------------------
 

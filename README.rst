@@ -1,7 +1,7 @@
 Deluge Client
 =============
-.. image:: https://ci.appveyor.com/api/projects/status/8s3g4uucg2xcay6v/branch/develop?svg=true
-    :target: https://ci.appveyor.com/project/AndersJensen/deluge-client
+.. .. image:: https://ci.appveyor.com/api/projects/status/8s3g4uucg2xcay6v/branch/develop?svg=true
+..     :target: https://ci.appveyor.com/project/AndersJensen/deluge-client
 
 A lightweight pure-python rpc client for deluge.
 Note, does not support events and any additional replies from deluge will mess up the datastream.
@@ -9,8 +9,8 @@ Note, does not support events and any additional replies from deluge will mess u
 Requirements
 ------------
 
-- Deluge 1.3.x, 2.0 beta
-- Python 2.7, 3.5, 3.6, 3.7
+- Deluge 1.3.x, 2.0, 2.1
+- Python 3.8, 3.9, 3.10, 3.11, 3.12
 
 Install
 -------
