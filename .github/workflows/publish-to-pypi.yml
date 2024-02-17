@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: deluge-client
-      url: https://test.pypi.org/p/deluge-client
+      url: https://pypi.org/p/deluge-client
     permissions:
       id-token: write
       contents: read
@@ -37,5 +37,4 @@ jobs:
           --outdir dist/
       - name: Publish distribution
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
+
