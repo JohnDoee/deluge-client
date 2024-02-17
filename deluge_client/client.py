@@ -48,14 +48,13 @@ class RemoteException(DelugeClientException):
 
 
 class DelugeRPCClient(object):
-    timeout = 20
-
-    def __init__(self, host, port, username, password, decode_utf8=False, automatic_reconnect=True):
+    def __init__(self, host, port, username, password, decode_utf8=False, automatic_reconnect=True, timeout=20):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
         self.deluge_version = None
+        self.timeout = timeout
         # This is only applicable if deluge_version is 2
         self.deluge_protocol_version = None
 
@@ -178,6 +177,9 @@ class DelugeRPCClient(object):
                 d = self._socket.recv(READ_SIZE)
             except ssl.SSLError:
                 raise CallTimeoutException()
+
+            if len(d) == 0:
+                raise ConnectionLostException()
 
             data += d
             if deluge_version == 2:
