@@ -1,7 +1,6 @@
 Deluge Client
 =============
-.. .. image:: https://ci.appveyor.com/api/projects/status/8s3g4uucg2xcay6v/branch/develop?svg=true
-..     :target: https://ci.appveyor.com/project/AndersJensen/deluge-client
+.. image:: https://github.com/JohnDoee/deluge-client/actions/workflows/main.yml/badge.svg?branch=master
 
 A lightweight pure-python rpc client for deluge.
 Note, does not support events and any additional replies from deluge will mess up the datastream.

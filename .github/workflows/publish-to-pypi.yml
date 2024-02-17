@@ -1,0 +1,41 @@
+name: Publish to pypi
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    tags:
+      - 1.*
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    name: Build and publish Python
+    runs-on: ubuntu-latest
+    environment:
+      name: deluge-client
+      url: https://test.pypi.org/p/deluge-client
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pypa/build
+        run: >-
+          python -m
+          pip install
+          build
+      - name: Build packages
+        run: >-
+          python -m
+          build
+          --sdist
+          --wheel
+          --outdir dist/
+      - name: Publish distribution
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/

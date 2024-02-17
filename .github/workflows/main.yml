@@ -1,0 +1,56 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master, develop, main ]
+  pull_request:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.9', '3.12']
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Setup Deluge
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            choco install deluge
+          else
+            sudo add-apt-repository ppa:deluge-team/develop -y
+            sudo apt-get -qq update
+            sudo apt-get install deluged -y
+          fi
+        shell: bash
+
+      - name: Start Deluge
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            mkdir $APPDATA/deluge
+            "c:/Program Files/Deluge/deluged.exe" &
+          else
+            /usr/bin/deluged --version
+            /usr/bin/deluged &
+          fi
+          sleep 10
+        shell: bash
+
+      - name: Install project
+        run: |
+          python -m pip install -U pytest
+          python -m pip install .
+
+      - name: Run tests
+        run: python -m pytest .
