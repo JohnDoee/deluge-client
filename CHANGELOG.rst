@@ -2,6 +2,15 @@
 Changelog
 ================================
 
+Version 1.10.1 (17-02-2024)
+--------------------------------
+
+* Added: Configurable timeout support #42
+
+* Bugfix: Bug related to hanging sockets #42
+* Bugfix: Trying to fix cipher issues with ssl socket #44
+* Bugfix: Issue with how the new ssl context is used after merging #45
+
 Version 1.10.0 (15-02-2024)
 --------------------------------
 

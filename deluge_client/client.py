@@ -68,18 +68,20 @@ class DelugeRPCClient(object):
         self.request_id = 1
         self.connected = False
 
+
+    def _create_socket(self, ssl_version=None, ciphers=None):
         # Insecure context without remote certificate verification
-        self._ssl_context = ssl.SSLContext(protocol=ssl.PROTOCOL_TLS_CLIENT)
-        self._ssl_context.check_hostname = False
-        self._ssl_context.verify_mode = ssl.CERT_NONE
+        # This logic is a bit messy to try and support various configurations
+        ssl_context = ssl.SSLContext(protocol=ssl_version or ssl.PROTOCOL_TLS_CLIENT)
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        if ciphers:
+            ssl_context.set_ciphers("AES256-SHA")
 
-        self._create_socket()
-
-    def _create_socket(self, ssl_version=None):
         if ssl_version is not None:
-            self._socket = self._ssl_context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), ssl_version=ssl_version)
+            self._socket = ssl_context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
         else:
-            self._socket = self._ssl_context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+            self._socket = ssl_context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
         self._socket.settimeout(self.timeout)
 
     def connect(self):
@@ -109,7 +111,9 @@ class DelugeRPCClient(object):
                 self._create_socket(ssl_version=ssl.PROTOCOL_SSLv3)
                 self._socket.connect((self.host, self.port))
             else:
-                raise
+                logger.warning('Was unable to ssl handshake, trying to change cipher')
+                self._create_socket(ciphers="AES256-SHA")
+                self._socket.connect((self.host, self.port))
 
     def disconnect(self):
         """
