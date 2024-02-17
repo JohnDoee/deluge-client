@@ -1,6 +1,6 @@
 Deluge Client
 =============
-.. image:: https://github.com/JohnDoee/deluge-client/actions/workflows/main.yml/badge.svg?branch=master
+.. image:: https://github.com/JohnDoee/deluge-client/actions/workflows/main.yml/badge.svg?branch=develop
 
 A lightweight pure-python rpc client for deluge.
 Note, does not support events and any additional replies from deluge will mess up the datastream.
