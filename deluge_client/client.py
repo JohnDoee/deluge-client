@@ -68,20 +68,21 @@ class DelugeRPCClient(object):
         self.request_id = 1
         self.connected = False
 
+        self._create_socket()
 
     def _create_socket(self, ssl_version=None, ciphers=None):
         # Insecure context without remote certificate verification
         # This logic is a bit messy to try and support various configurations
-        ssl_context = ssl.SSLContext(protocol=ssl_version or ssl.PROTOCOL_TLS_CLIENT)
+        if ssl_version is not None:
+            ssl_context = ssl.SSLContext(protocol=ssl_version)
+        else:
+            ssl_context = ssl.SSLContext(protocol=ssl.PROTOCOL_TLS_CLIENT)
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
         if ciphers:
             ssl_context.set_ciphers("AES256-SHA")
 
-        if ssl_version is not None:
-            self._socket = ssl_context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-        else:
-            self._socket = ssl_context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+        self._socket = ssl_context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
         self._socket.settimeout(self.timeout)
 
     def connect(self):
